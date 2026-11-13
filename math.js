@@ -127,13 +127,13 @@ const FLAVOR = {
       outcome: (n) => (n === 1 ? "1 legionary turns toward the noise" : `${n} legionaries turn toward the noise`),
     },
     physician: {
-      setup: (total) => `There are ${total} fallen neighbors by the shields.`,
+      setup: (total) => `There are ${total} injured people by the shields.`,
       active: (part) => `${part} of them are close enough to reach.`,
-      rate: (num, den) => `For every ${den} fallen neighbors, ${num} are close enough to reach.`,
+      rate: (num, den) => `For every ${den} injured people, ${num} are close enough to reach.`,
       leaveOne: "1 of them is pulled back into the crush.",
       leaveMany: (k) => `${k} of them are pulled back into the crush.`,
-      ask: "How many fallen neighbors get pulled clear?",
-      outcome: (n) => (n === 1 ? "1 fallen neighbor gets pulled clear" : `${n} fallen neighbors get pulled clear`),
+      ask: "How many injured people get pulled clear?",
+      outcome: (n) => (n === 1 ? "1 injured person gets pulled clear" : `${n} injured people get pulled clear`),
     },
     soldier: {
       setup: (total) => `There are ${total} shields in the line.`,

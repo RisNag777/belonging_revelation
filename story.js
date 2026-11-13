@@ -30,9 +30,10 @@ export const CREDIT = "Adapted from The Palace Isn't Safe! by Joana Almeida (202
 
 export const INTRO = [
   "The year is 198 AD. The Roman emperor Evilus has defeated the  army outside Crete. King Christos has fled, and the Romans are invading the capital.",
-  "You are still in the city with about 100 villagers. If you do not get out, the Romans will kill you. At each stage, up to 25 villagers can be lost.",
+  "You are still in the city with about 100 villagers. If you do not get out, the Romans will kill you.",
   "You have 6 minutes. A success makes the next person's challenge easier. A miss makes it harder.",
-  "Roll a 20-sided die. That sets up a math question about what is happening. The check uses your dice roll, not the math answer. Howver, a correct answer adds 2 to the roll, and a wrong answer halves it (× 0.5). If that total meets the challenge number, you succeed. A miss costs HP. Rolling a 1 is a critical miss: no math, and you lose 2 HP. A 20 is a critical hit: you succeed and skip the math.",
+  "Roll a 20-sided die. That sets up a math question about what is happening. The check uses your dice roll, not the math answer. However, a correct answer adds 2 to the roll, and a wrong answer halves it (× 0.5). If that total is greater than or equal to the challenge number, you succeed.",
+  "A miss costs HP. Rolling a 1 is a critical miss: no math, and you lose 2 HP. A 20 is a critical hit: you succeed and skip the math.",
 ];
 
 export const SCENES = [

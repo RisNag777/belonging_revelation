@@ -947,7 +947,7 @@ function chooseCode(code) {
 function renderHome() {
   return h("section", {},
     INTRO.map((paragraph) => h("p", {}, paragraph)),
-    h("p", {}, "Pick a party code. Each code seats 3 people, and the first one in is the host."),
+    h("p", {}, "Pick a party code. Each party can have 2-3 people."),
     gate.notice ? h("p", { class: "banner miss" }, gate.notice) : null,
     board.length
       ? h("div", { class: "code-board" }, board.map((item) => {

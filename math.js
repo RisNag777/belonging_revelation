@@ -14,7 +14,7 @@ const FLAVOR = {
       ask: "How many steps stay dark enough to hide on?",
       outcome: (n) => (n === 1 ? "1 step stays dark enough to hide on" : `${n} steps stay dark enough to hide on`),
     },
-    blacksmith: {
+    titan: {
       setup: (total) => `The side-door bar has ${total} bolts.`,
       active: (part) => `${part} of them are loose enough to bend.`,
       rate: (num, den) => `For every ${den} bolts, ${num} are loose enough to bend.`,
@@ -61,7 +61,7 @@ const FLAVOR = {
       ask: "How many roofs can you cross?",
       outcome: (n) => (n === 1 ? "1 roof can be crossed" : `${n} roofs can be crossed`),
     },
-    blacksmith: {
+    titan: {
       setup: (total) => `There are ${total} beams blocking the lane.`,
       active: (part) => `${part} of them are light enough to drag.`,
       rate: (num, den) => `For every ${den} beams, ${num} are light enough to drag.`,
@@ -108,7 +108,7 @@ const FLAVOR = {
       ask: "How many shields let you slip behind?",
       outcome: (n) => (n === 1 ? "1 shield lets you slip behind" : `${n} shields let you slip behind`),
     },
-    blacksmith: {
+    titan: {
       setup: (total) => `There are ${total} shields in the line.`,
       active: (part) => `${part} of them have a rim you can grip.`,
       rate: (num, den) => `For every ${den} shields, ${num} have a rim you can grip.`,
@@ -155,7 +155,7 @@ const FLAVOR = {
       ask: "How many rungs can you climb?",
       outcome: (n) => (n === 1 ? "1 rung can be climbed" : `${n} rungs can be climbed`),
     },
-    blacksmith: {
+    titan: {
       setup: (total) => `The gate bar has ${total} pins.`,
       active: (part) => `${part} of them are soft enough to bend.`,
       rate: (num, den) => `For every ${den} pins, ${num} are soft enough to bend.`,
@@ -513,7 +513,7 @@ export function makeAftermathProblem(sceneId, wins, attempts, villagers = START_
   if (lost === 0) {
     forms = [{
       skill: "fractions",
-      text: `You still have ${before} villagers. This stage was a success! All of the villagers came through unscathed. ${flavor.askLost}`,
+      text: `You have ${before} villagers. This stage was a success! All of the villagers came through unscathed. ${flavor.askLost}`,
       work: `0 of ${MAX_STAGE_LOSS} = 0`,
     }];
   } else {
@@ -521,23 +521,23 @@ export function makeAftermathProblem(sceneId, wins, attempts, villagers = START_
     forms = [
       {
         skill: "fractions",
-        text: `You still have ${before} villagers. Up to ${MAX_STAGE_LOSS} of them ${flavor.danger}. ${ratio.label} of those ${MAX_STAGE_LOSS} are lost. ${askLost ? flavor.askLost : flavor.askLeft}`,
+        text: `You have ${before} villagers. ${MAX_STAGE_LOSS} of them ${flavor.danger}. ${ratio.label} of those ${MAX_STAGE_LOSS} are lost. ${askLost ? flavor.askLost : flavor.askLeft}`,
         work: askLost ? `${ratio.label} of ${MAX_STAGE_LOSS} = ${lost}` : `${before} − ${lost} = ${left}`,
       },
       {
         skill: "decimals",
-        text: `You still have ${before} villagers. Up to ${MAX_STAGE_LOSS} of them ${flavor.danger}. ${ratio.decimal} of those ${MAX_STAGE_LOSS} are lost. ${askLost ? flavor.askLost : flavor.askLeft}`,
+        text: `You have ${before} villagers. ${MAX_STAGE_LOSS} of them ${flavor.danger}. ${ratio.decimal} of those ${MAX_STAGE_LOSS} are lost. ${askLost ? flavor.askLost : flavor.askLeft}`,
         work: askLost ? `${ratio.decimal} × ${MAX_STAGE_LOSS} = ${lost}` : `${before} − ${lost} = ${left}`,
       },
       {
         skill: "percents",
-        text: `You still have ${before} villagers. Up to ${MAX_STAGE_LOSS} of them ${flavor.danger}. ${ratio.percent} of those ${MAX_STAGE_LOSS} are lost. ${askLost ? flavor.askLost : flavor.askLeft}`,
+        text: `You have ${before} villagers. ${MAX_STAGE_LOSS} of them ${flavor.danger}. ${ratio.percent} of those ${MAX_STAGE_LOSS} are lost. ${askLost ? flavor.askLost : flavor.askLeft}`,
         work: askLost ? `${ratio.percent} of ${MAX_STAGE_LOSS} = ${lost}` : `${before} − ${lost} = ${left}`,
         percent: true,
       },
       {
         skill: "proportionality",
-        text: `You still have ${before} villagers. Up to ${MAX_STAGE_LOSS} of them ${flavor.danger}. For every ${ratio.den} of those ${MAX_STAGE_LOSS}, ${ratio.num} are lost. ${askLost ? flavor.askLost : flavor.askLeft}`,
+        text: `You have ${before} villagers. ${MAX_STAGE_LOSS} of them ${flavor.danger}. For every ${ratio.den} of those ${MAX_STAGE_LOSS}, ${ratio.num} are lost. ${askLost ? flavor.askLost : flavor.askLeft}`,
         work: askLost ? `${MAX_STAGE_LOSS} ÷ ${ratio.den} × ${ratio.num} = ${lost}` : `${before} − ${lost} = ${left}`,
       },
     ];
@@ -594,7 +594,7 @@ function legalCount(roll, count) {
 export function selfTestMath() {
   const seen = new Set();
   const found = new Set();
-  const roles = ["assassin", "blacksmith", "minstrel", "physician", "soldier"];
+  const roles = ["assassin", "titan", "minstrel", "physician", "soldier"];
   const sceneIds = Object.keys(FLAVOR);
   for (let roll = 1; roll <= 20; roll += 1) {
     for (let n = 0; n < 6; n += 1) {

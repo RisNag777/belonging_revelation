@@ -5,9 +5,9 @@ export const ROLES = [
     blurb: "Quiet and fast. Good at staying out of sight and getting past people without a fight.",
   },
   {
-    id: "blacksmith",
-    label: "Blacksmith",
-    blurb: "Strong from working the forge. Can bend bars, break locks, and move heavy iron.",
+    id: "titan",
+    label: "Titan",
+    blurb: "A towering powerhouse, built like a battering ram. They can perform unbelievably strong feats with bare hands.",
   },
   {
     id: "minstrel",
@@ -48,9 +48,9 @@ export const SCENES = [
     stake: "Get out of the palace before the Romans reach the hall.",
     roleActions: {
       soldier: "Hold the doors so the others can leave.",
-      physician: "Get the injured people up and toward the exit.",
+      physician: "Heal the injured and guide them toward the exit.",
       assassin: "Slip out through a backdoor and make sure the coast is clear.",
-      blacksmith: "Bend the bar on the side door so it opens.",
+      titan: "Bend the bar on the side door so it opens.",
       minstrel: "Sing a song that draws people toward the exit.",
     },
     roleOutcomes: {
@@ -60,7 +60,7 @@ export const SCENES = [
         wound: "A Roman shield hits {hero}",
       },
       physician: {
-        success: "{hero} gets the injured people out of the hall.",
+        success: "{hero} heals the injured and guides them out of the hall.",
         fail: "The smoke is too thick. {hero} starts coughing, and some of the injured stay behind.",
         wound: "Smoke makes {hero} cough and choke",
       },
@@ -69,7 +69,7 @@ export const SCENES = [
         fail: "A guard spots {hero} and attacks.",
         wound: "A palace guard attacks {hero}",
       },
-      blacksmith: {
+      titan: {
         success: "{hero} bends the bar, and the side door opens.",
         fail: "The bar will not bend. It snaps back and hits {hero}, and the door stays shut.",
         wound: "The iron bar snaps back into {hero}",
@@ -93,9 +93,9 @@ export const SCENES = [
     stake: "Cross the burning bazaar.",
     roleActions: {
       soldier: "Hold off the Romans and let the people pass safely.",
-      physician: "Keep people from collapsing in the smoke.",
+      physician: "Cast a clean air spell so people do not collapse in the smoke.",
       assassin: "Cross on the roofs, look for a lane that is still open, and lead the group through.",
-      blacksmith: "Drag a burning beam out of the way and toss it at the Romans.",
+      titan: "Drag a burning beam out of the way and toss it at the Romans.",
       minstrel: "Sing a song to summon rain to put out the fires.",
     },
     roleOutcomes: {
@@ -105,7 +105,7 @@ export const SCENES = [
         wound: "A Roman soldier hits {hero}",
       },
       physician: {
-        success: "{hero} keeps everyone moving through the smoke.",
+        success: "{hero} casts a clean air spell, so everyone can breathe again.",
         fail: "{hero} chokes and goes down. Some of the crowd also collapse in the smoke.",
         wound: "Smoke chokes {hero}",
       },
@@ -114,7 +114,7 @@ export const SCENES = [
         fail: "A stall collapses under {hero}. The path over the roofs is gone.",
         wound: "A stall collapses under {hero} and he falls to the street.",
       },
-      blacksmith: {
+      titan: {
         success: "{hero} pulls the beam clear, and the path opens. He hurls it at the Romans and they scatter.",
         fail: "The beam slips and burns {hero}. The path stays blocked.",
         wound: "The burning beam slips onto {hero}",
@@ -138,9 +138,9 @@ export const SCENES = [
     stake: "Get past the legion without getting caught.",
     roleActions: {
       soldier: "Battle the soldiers and break a gap in the shield wall.",
-      physician: "Pull people who have fallen out of the crowd so they avoid getting caught in the stampede.",
+      physician: "Heal broken bones of people who were caught in the stampede.",
       assassin: "Slip along the wall behind the shields and backstab the soldiers.",
-      blacksmith: "Yank a shield out of the line and toss it at the soldiers, making another path for the people to pass through.",
+      titan: "Yank a shield out of the line and toss it at the soldiers, making another path for the people to pass through.",
       minstrel: "Distract the soldiers with some music that conjures up the visage of a dragon.",
     },
     roleOutcomes: {
@@ -150,7 +150,7 @@ export const SCENES = [
         wound: "The Roman soldiers throw {hero} back.",
       },
       physician: {
-        success: "{hero} pulls fallen people clear of the crowd.",
+        success: "{hero} heals broken bones of people who were caught in the stampede.",
         fail: "The crowd knocks {hero} over. The stampede continues.",
         wound: "The crowd knocks {hero} down",
       },
@@ -159,7 +159,7 @@ export const SCENES = [
         fail: "A Roman soldier catches {hero} and pins them down.",
         wound: "A Roman soldier pins {hero} down",
       },
-      blacksmith: {
+      titan: {
         success: "{hero} rips a shield out of the line and tosses it at the soldiers, making a path for the people to pass through.",
         fail: "The shield will not move. A spear hits {hero}, and they fall back.",
         wound: "A spear hits {hero}",
@@ -186,7 +186,7 @@ export const SCENES = [
       soldier: "Pick up a bow and arrow and shoot the Roman soldiers on the wall.",
       physician: "Cast shielding magic to protect the people from the arrows.",
       assassin: "Climb the gatehouse and jam the winch so the gate cannot fall.",
-      blacksmith: "Hold the gate open so the people can pass through.",
+      titan: "Hold the gate open so the people can pass through.",
       minstrel: "Sing a song to inspire the people to rush faster through the gate.",
     },
     roleOutcomes: {
@@ -197,7 +197,7 @@ export const SCENES = [
       },
       physician: {
         success: "{hero} casts shielding magic to protect the people from the arrows.",
-        fail: "{hero} is hit by an arrow. The people are not protected.",
+        fail: "There are too many arrows and {hero} cannot block them all. He gets hit by an arrow.",
         wound: "An arrow hits {hero}",
       },
       assassin: {
@@ -205,7 +205,7 @@ export const SCENES = [
         fail: "The winch slips and smashes {hero}'s hands. The gate continues to drop.",
         wound: "The winch smashes {hero}'s hands",
       },
-      blacksmith: {
+      titan: {
         success: "{hero} holds the gate open so the people can pass through.",
         fail: "The gate is too heavy. {hero} cannot hold it open. The gate continues to drop.",
         wound: "{hero} is not able to hold the gate open and he falls to the ground.",

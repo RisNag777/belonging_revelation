@@ -26,10 +26,10 @@ FILES = {
     "/admin": ("admin.html", "text/html; charset=utf-8"),
     "/admin.html": ("admin.html", "text/html; charset=utf-8"),
 }
-ROLES = {"assassin", "blacksmith", "minstrel", "physician", "soldier"}
+ROLES = {"assassin", "titan", "minstrel", "physician", "soldier"}
 ROLE_LABELS = {
     "assassin": "Assassin",
-    "blacksmith": "Blacksmith",
+    "titan": "Titan",
     "minstrel": "Minstrel",
     "physician": "Physician",
     "soldier": "Soldier",

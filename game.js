@@ -221,9 +221,9 @@ function onBegin(event) {
 function stoneEpitaph(roleId) {
   const lines = {
     assassin: "Cut a dark path so others lived",
-    blacksmith: "Held the way open with iron",
+    titan: "Held the way open with raw strength",
     minstrel: "Sang danger away to the last",
-    physician: "Raised one more before falling",
+    physician: "Healed one more before falling",
     soldier: "Held the line so others escaped",
   };
   return lines[roleId] || "Fell so others could escape";
@@ -1193,7 +1193,7 @@ function renderAftermath(scene) {
     partyCards(null),
     h("p", { class: "kicker" }, `Scene ${state.step + 1} of ${SCENES.length} · Villagers`),
     h("h2", {}, scene.title),
-    h("p", {}, `Your party passed ${score.wins} of ${score.attempts} checks here. Up to ${MAX_STAGE_LOSS} villagers can be lost at this stage.`),
+    h("p", {}, `Your party passed ${score.wins} of ${score.attempts} checks here.`),
   ];
   if (beat === "aftermath") {
     parts.push(h("p", { class: "kicker" }, problemLabel(problem.skill)));

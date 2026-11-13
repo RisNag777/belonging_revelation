@@ -29,10 +29,10 @@ export const ROLES = [
 export const CREDIT = "Adapted from The Palace Isn't Safe! by Joana Almeida (2023), CC BY 4.0. https://iohanna.itch.io/the-palace-isnt-safe";
 
 export const INTRO = [
-  "The year is 198 AD. The Roman emperor Septimius Severus has defeated the Parthian army outside Ctesiphon. King Vologases V has fled, and the Romans are invading the capital.",
+  "The year is 198 AD. The Roman emperor Evilus has defeated the  army outside Crete. King Christos has fled, and the Romans are invading the capital.",
   "You are still in the city with about 100 villagers. If you do not get out, the Romans will kill you. At each stage, up to 25 villagers can be lost.",
-  "You have 10 minutes. A success makes the next person's challenge easier. A miss makes it harder.",
-  "Roll a d20. That sets up a math question about what is happening. A wrong answer fails the check even if the roll was high enough, and a miss costs HP. A 1 is a critical miss: you get a harder multi-step problem, and a miss costs 2 HP. A 20 is a critical hit: you succeed and skip the math.",
+  "You have 6 minutes. A success makes the next person's challenge easier. A miss makes it harder.",
+  "Roll a 20-sided die. That sets up a math question about what is happening. The check uses your dice roll, not the math answer. Howver, a correct answer adds 2 to the roll, and a wrong answer halves it (× 0.5). If that total meets the challenge number, you succeed. A miss costs HP. Rolling a 1 is a critical miss: no math, and you lose 2 HP. A 20 is a critical hit: you succeed and skip the math.",
 ];
 
 export const SCENES = [

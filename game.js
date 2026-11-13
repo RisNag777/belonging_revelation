@@ -1,7 +1,7 @@
-import { gradeAnswer, makeAftermathProblem, makeProblem, meetsChallenge, selfTestMath, START_VILLAGERS, MAX_STAGE_LOSS } from "./math.js";
+import { gradeAnswer, makeAftermathProblem, makeProblem, selfTestMath, START_VILLAGERS, MAX_STAGE_LOSS } from "./math.js";
 import { CREDIT, INTRO, ROLES, SCENES } from "./story.js";
 
-const DURATION_MS = 10 * 60 * 1000;
+const DURATION_MS = 6 * 60 * 1000;
 const MAX_HERO_HP = 4;
 const DEFAULT_FAIL_HP_LOSS = 1;
 const CRIT_FAIL_HP_LOSS = 2;
@@ -218,30 +218,29 @@ function onBegin(event) {
   publishParty("play");
 }
 
-function heroicDeath(scene, hero, roleId) {
-  const place = scene.title;
-  const lines = {
-    assassin: `At ${place}, ${hero} the Assassin went first into the dark and cut a path no one else could take. Romans closed in, but ${hero} stayed hidden and fighting so the rest could slip away.`,
-    blacksmith: `At ${place}, ${hero} the Blacksmith put iron between the living and the Romans. Bars bent, doors held, and ${hero} did not leave their post until the last villager was through.`,
-    minstrel: `At ${place}, ${hero} the Minstrel sang into the chaos and challenged their foes with their voice. The song bought the others their lives, and ${hero} kept singing until the end.`,
-    physician: `At ${place}, ${hero} the Physician refused to leave the wounded. They made sure that no one suffered or succumbed to their wounds.`,
-    soldier: `At ${place}, ${hero} the Soldier stood their ground and held the line against the Roman hordes. They stood firm long enough for the others to escape.`,
-  };
-  return lines[roleId] || `At ${place}, ${hero} fell buying the others a chance to escape.`;
-}
-
 function stoneEpitaph(roleId) {
   const lines = {
-    assassin: "Who went first into the dark\nand cut a path alone\nso we could flee",
-    blacksmith: "Who bent iron with bare hands\nand held the passage open\nuntil we all got through",
-    minstrel: "Whose song drew the danger\nand bought the crowd their lives\nuntil the final note",
-    physician: "Who stayed among the wounded\nand raised our spirits\nuntil the end",
-    soldier: "Who held the line alone\nagainst the Roman crush\nso we could live",
+    assassin: "Cut a dark path so others lived",
+    blacksmith: "Held the way open with iron",
+    minstrel: "Sang danger away to the last",
+    physician: "Raised one more before falling",
+    soldier: "Held the line so others escaped",
   };
-  return lines[roleId] || "Who fell in Ctesiphon\nso others could escape\nand live beyond the walls";
+  return lines[roleId] || "Fell so others could escape";
 }
 
-function recordCheck({ scene, roll, success, correct, hpLoss, crit, problem, given }) {
+function heroicDeath(scene, hero, roleId) {
+  return stoneEpitaph(roleId);
+}
+
+function graveNameClass(name) {
+  const n = String(name || "").trim().length;
+  if (n <= 7) return "grave-name";
+  if (n <= 11) return "grave-name grave-name-md";
+  return "grave-name grave-name-sm";
+}
+
+function recordCheck({ scene, roll, success, correct, hpLoss, crit, problem, given, final }) {
   const hero = heroName(scene.role);
   if (hpLoss > 0) state.hp[scene.role] = Math.max(0, heroHp(scene.role) - hpLoss);
   const dead = heroHp(scene.role) <= 0;
@@ -249,6 +248,7 @@ function recordCheck({ scene, roll, success, correct, hpLoss, crit, problem, giv
   let resultText = withHero(success ? scene.success : scene.fail, hero);
   if (crit === "fail") resultText = `Critical miss. ${resultText}`;
   if (crit === "success") resultText = `Critical hit. ${resultText} The math check is skipped.`;
+  const total = Number.isFinite(final) ? final : roll;
   state.log.push({
     sceneId: scene.id,
     title: scene.title,
@@ -256,18 +256,22 @@ function recordCheck({ scene, roll, success, correct, hpLoss, crit, problem, giv
     hero,
     dc: scene.dc,
     roll,
-    final: problem?.display || String(roll),
-    detail: crit === "success" ? "Critical hit: no math needed" : (problem?.work || ""),
+    final: String(total),
+    detail: crit === "success"
+      ? "Critical hit: no math needed"
+      : (crit === "fail" ? "Critical miss: no math" : (problem?.work || "")),
     correct: Boolean(correct),
     given: given || "",
     answer: problem?.display || String(roll),
-    outcome: problem?.outcome || (success ? `the check clears on a ${roll}` : `the check fails on a ${roll}`),
+    outcome: problem?.outcome || (success ? `the check clears on a ${total}` : `the check fails on a ${total}`),
     problem: problem?.text || "",
     success,
     hpLoss,
     wound,
     resultText,
     crit: crit || "",
+    bonus: crit ? 0 : (correct ? 2 : 0),
+    halved: Boolean(!crit && !correct && problem),
     priorHero: scene.prior?.hero || "",
     priorSuccess: scene.prior ? scene.prior.success : null,
     finale: Boolean(scene.finale),
@@ -294,6 +298,19 @@ function onRoll() {
   const scene = currentScene();
   if (!scene || beat !== "scene" || ended || !mineToAct()) return;
   const roll = rollD20();
+  if (roll === 1) {
+    state.pending = { roll, crit: "fail" };
+    recordCheck({
+      scene,
+      roll,
+      success: false,
+      correct: false,
+      hpLoss: CRIT_FAIL_HP_LOSS,
+      crit: "fail",
+      final: roll,
+    });
+    return;
+  }
   if (roll === 20) {
     state.pending = { roll, crit: "success" };
     recordCheck({
@@ -303,12 +320,12 @@ function onRoll() {
       correct: true,
       hpLoss: 0,
       crit: "success",
+      final: roll,
     });
     return;
   }
   state.pending = {
     roll,
-    crit: roll === 1 ? "fail" : "",
     problem: makeProblem(scene.id, state.step, Math.random, state.seen, roll, scene.role),
   };
   beat = "problem";
@@ -332,19 +349,19 @@ function onAnswer(event) {
     return;
   }
   const correct = graded.ok;
-  const crit = state.pending.crit || "";
-  const success = correct && meetsChallenge(problem.answer, scene.dc);
-  const baseLoss = Number.isFinite(scene.failHpLoss) ? scene.failHpLoss : DEFAULT_FAIL_HP_LOSS;
-  const hpLoss = success ? 0 : (crit === "fail" ? CRIT_FAIL_HP_LOSS : baseLoss);
+  const roll = state.pending.roll;
+  const final = correct ? roll + 2 : Math.floor(roll * 0.5);
+  const success = final >= scene.dc;
+  const hpLoss = success ? 0 : (Number.isFinite(scene.failHpLoss) ? scene.failHpLoss : DEFAULT_FAIL_HP_LOSS);
   recordCheck({
     scene,
-    roll: state.pending.roll,
+    roll,
     success,
     correct,
     hpLoss,
-    crit,
     problem,
     given,
+    final,
   });
 }
 
@@ -1053,7 +1070,7 @@ function renderSetup() {
 function renderObituary() {
   const notice = state.obituary;
   const name = notice?.name || "A hero";
-  const stoneLines = String(notice?.stone || stoneEpitaph(notice?.role)).split("\n");
+  const epitaph = notice?.stone || notice?.epitaph || stoneEpitaph(notice?.role);
   return h("section", { class: "obituary" },
     partyCards(notice?.role || null),
     h("p", { class: "kicker" }, "Fallen in Ctesiphon"),
@@ -1061,14 +1078,13 @@ function renderObituary() {
       h("img", { class: "grave-photo", src: "/assets/gravestone.jpg", alt: `Gravestone for ${name}` }),
       h("div", { class: "grave-face", "aria-label": "Inscription" },
         h("p", { class: "grave-here" }, "HERE LIES"),
-        h("h2", { class: "grave-name" }, name),
+        h("h2", { class: graveNameClass(name), title: name }, name),
         h("p", { class: "grave-class" }, `the ${notice?.label || "hero"}`),
         h("p", { class: "grave-rule" }, "✦"),
-        ...stoneLines.map((line) => h("p", { class: "grave-epitaph" }, line)),
+        h("p", { class: "grave-epitaph" }, epitaph),
         notice?.scene ? h("p", { class: "grave-place" }, notice.scene) : null,
       ),
     ),
-    h("p", { class: "obituary-story" }, notice?.epitaph || "They fell so others could keep moving."),
     notice?.wound ? h("p", { class: "banner miss" }, `How they fell: ${notice.wound}.`) : null,
     mineToAct()
       ? h("button", { class: "primary", type: "button", onclick: onObituaryContinue }, "Read the summary")
@@ -1101,7 +1117,7 @@ function renderPlay() {
       parts.push(h("p", {}, state.pending.problem.text));
     }
   } else if (beat === "scene") {
-    parts.push(h("p", {}, `Beat a ${scene.dc} on the die.`));
+    parts.push(h("p", {}, "Beat a ", h("strong", {}, String(scene.dc)), " on the dice total. Correct math: +2 to the roll. Wrong math: × 0.5."));
     parts.push(h("div", { class: "roll-row" },
       h("img", { class: "roll-die", src: "/dice/button.png", alt: "" }),
       h("button", { class: "primary", type: "button", onclick: onRoll }, "Roll dice"),
@@ -1109,40 +1125,45 @@ function renderPlay() {
   } else if (beat === "problem") {
     const roll = state.pending.roll;
     parts.push(dieFace(roll));
-    if (state.pending.crit === "fail") {
-      parts.push(h("p", { class: "banner miss" }, "Natural 1. Critical miss — harder multi-step math. A miss costs 2 HP."));
-    }
+    parts.push(h("p", { class: "banner" }, `Rolled ${roll}. Need `, h("strong", {}, String(scene.dc)), `. Right answer: ${roll} + 2. Wrong answer: ${roll} × 0.5.`));
     parts.push(h("p", { class: "kicker" }, problemLabel(state.pending.problem.skill)));
     parts.push(h("p", {}, state.pending.problem.text));
     parts.push(h("form", { onsubmit: onAnswer },
       h("div", { class: "answer-row" },
-        h("input", { id: "answer", inputmode: "text", autocomplete: "off", placeholder: "3/4 or 0.25" }),
+        h("input", { id: "answer", inputmode: "text", autocomplete: "off" }),
         h("button", { class: "primary", type: "submit" }, "Confirm"),
       ),
       h("p", { id: "answer-error", class: "error" }),
     ));
   } else {
     const row = state.log[state.log.length - 1];
+    const totalLine = row.bonus
+      ? `${row.roll} + 2 = ${row.final}`
+      : (row.halved ? `${row.roll} × 0.5 = ${row.final}` : row.final);
+    const mathLine = row.crit === "success" || row.crit === "fail"
+      ? row.detail
+      : `${row.correct ? "Right (+2)" : "Wrong (× 0.5)"}: ${row.detail}`;
     parts.push(dieFace(row.roll));
     parts.push(h("p", {}, row.resultText));
     parts.push(h("div", { class: "score" },
       line("Die", row.roll),
-      line("Math", row.crit === "success" ? row.detail : `${row.correct ? "Right" : "Wrong"}: ${row.detail}`),
-      line("Total", row.final),
+      line("Math", mathLine),
+      line("Total", totalLine),
       line("Need", row.dc),
       line("Check", row.success ? "Passed" : "Failed"),
     ));
     if (row.crit === "success") {
       parts.push(h("p", { class: "banner good" }, "Natural 20. The math check is skipped, and the attempt succeeds."));
+    } else if (row.crit === "fail") {
+      parts.push(h("p", { class: "banner miss" }, "Natural 1. Critical miss. No math — you lose 2 HP."));
     } else if (row.correct) {
       parts.push(h("p", {}, row.success
-        ? `${row.outcome}.`
-        : `${row.outcome}. The math was right, but the die was too low.`));
+        ? `${row.outcome}. Correct math added 2, so the dice total cleared ${row.dc}.`
+        : `${row.outcome}. Correct math added 2, but ${row.final} still fell short of ${row.dc}.`));
     } else {
-      parts.push(h("p", {}, `You put ${row.given}. The right answer was ${row.outcome}. That fails the check.`));
-    }
-    if (row.crit === "fail" && row.hpLoss > 0) {
-      parts.push(h("p", { class: "banner miss" }, "Natural 1. Critical miss — failed checks cost 2 HP."));
+      parts.push(h("p", {}, row.success
+        ? `You put ${row.given}. The right answer was ${row.outcome}. Wrong math halved the roll, but ${row.final} still met ${row.dc}.`
+        : `You put ${row.given}. The right answer was ${row.outcome}. Wrong math halved the roll to ${row.final}, which misses ${row.dc}.`));
     }
     if (row.hpLoss > 0) {
       parts.push(h("p", { class: "banner miss" }, `${row.hero} loses ${row.hpLoss} HP. ${row.wound}. ${heroHp(row.role)}/${MAX_HERO_HP} left.`));
@@ -1180,7 +1201,7 @@ function renderAftermath(scene) {
     if (mineAftermath()) {
       parts.push(h("form", { onsubmit: onAftermathAnswer },
         h("div", { class: "answer-row" },
-          h("input", { id: "answer", inputmode: "text", autocomplete: "off", placeholder: "3/4 or 0.25" }),
+          h("input", { id: "answer", inputmode: "text", autocomplete: "off" }),
           h("button", { class: "primary", type: "submit" }, "Confirm"),
         ),
         h("p", { id: "answer-error", class: "error" }),
@@ -1303,7 +1324,7 @@ function boot() {
   document.getElementById("app").replaceChildren(
     h("header", { class: "top" },
       h("div", {},
-        h("p", { class: "eyebrow" }, SOLO ? "One-person test" : "A 10-minute escape"),
+        h("p", { class: "eyebrow" }, SOLO ? "One-person test" : "A 6-minute escape"),
         h("h1", {}, "The Palace Isn't Safe"),
       ),
       h("div", { id: "clock-slot", class: "clock-slot" },

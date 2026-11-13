@@ -192,6 +192,8 @@ a.ghost { display: inline-block; }
 .admin-table .muted,
 .admin-members.muted { color: #8a7460; }
 .admin-empty { margin: 8px 0; color: #6b5340; }
+.admin-mvp .mvp-lead td { background: #f7ebd3; }
+.admin-mvp .mvp-lead strong { color: var(--gold); }
 .obituary-story {
   max-width: 42rem;
   margin: 0 auto 12px;
@@ -229,6 +231,7 @@ a.ghost { display: inline-block; }
   text-align: center;
   padding: 0 2%;
   box-sizing: border-box;
+  container-type: inline-size;
   color: #fffdf6;
   font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
   -webkit-text-stroke: 0.85px rgba(8, 8, 8, 0.7);
@@ -256,13 +259,23 @@ a.ghost { display: inline-block; }
 }
 .grave-name {
   margin: 0;
-  font-size: clamp(2.6rem, 8.5vw, 3.9rem);
+  font-size: clamp(1.6rem, 22cqi, 3.2rem);
   line-height: 1.02;
   letter-spacing: 0.06em;
   font-weight: 700;
   text-transform: uppercase;
   max-width: 100%;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.grave-name-md {
+  font-size: clamp(1.3rem, 16cqi, 2.35rem);
+  letter-spacing: 0.03em;
+}
+.grave-name-sm {
+  font-size: clamp(1.05rem, 12cqi, 1.75rem);
+  letter-spacing: 0.02em;
 }
 .grave-class {
   font-size: clamp(1.5rem, 4.6vw, 2.15rem);
@@ -276,9 +289,12 @@ a.ghost { display: inline-block; }
   margin: 0.25em 0;
 }
 .grave-epitaph {
-  font-size: clamp(1.35rem, 4.1vw, 1.9rem);
+  font-size: clamp(1.05rem, 3.2vw, 1.45rem);
   font-weight: 700;
   max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .grave-place {
   margin-top: 0.45em;

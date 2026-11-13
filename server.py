@@ -244,6 +244,64 @@ def party_admin_row(party):
     }
 
 
+def mvp_score(student):
+    return (
+        int(student.get("mathCorrect") or 0) * 3
+        + int(student.get("checksPassed") or 0) * 2
+        + int(student.get("hp") or 0)
+        + int(student.get("sceneIndex") or 0)
+    )
+
+
+def mvp_reason(student):
+    attempts = int(student.get("mathAttempts") or 0)
+    correct = int(student.get("mathCorrect") or 0)
+    wins = int(student.get("checksPassed") or 0)
+    hp = int(student.get("hp") or 0)
+    bits = []
+    if attempts:
+        bits.append(f"{correct}/{attempts} math right")
+    bits.append(f"{wins} checks passed")
+    bits.append(f"{hp} HP left")
+    if student.get("sceneIndex"):
+        bits.append(f"scene {student['sceneIndex']}/{student.get('sceneTotal') or len(SCENE_TITLES)}")
+    return " · ".join(bits)
+
+
+def build_mvp(students):
+    by_party = {}
+    for student in students:
+        code = student.get("party")
+        if not code:
+            continue
+        by_party.setdefault(code, []).append(student)
+    board = []
+    for code in sorted(by_party):
+        members = by_party[code]
+        eligible = [
+            student for student in members
+            if student.get("phase") in ("play", "summary") or int(student.get("mathAttempts") or 0) > 0
+        ]
+        pool = eligible or members
+        if not pool:
+            continue
+        winner = max(pool, key=mvp_score)
+        board.append({
+            "party": code,
+            "name": winner.get("name"),
+            "roleLabel": winner.get("roleLabel"),
+            "score": mvp_score(winner),
+            "reason": mvp_reason(winner),
+            "status": winner.get("status"),
+            "hp": winner.get("hp"),
+            "mathCorrect": winner.get("mathCorrect"),
+            "mathAttempts": winner.get("mathAttempts"),
+            "checksPassed": winner.get("checksPassed"),
+            "partySize": len(members),
+        })
+    return board
+
+
 def admin_snapshot():
     parties = []
     students = []
@@ -258,6 +316,7 @@ def admin_snapshot():
             students.append(student_from_member(party, member, game))
     active_parties = sum(1 for row in parties if row["active"])
     playing = sum(1 for row in parties if row["phase"] in ("play", "summary"))
+    mvp = build_mvp(students)
     return {
         "updatedAt": int(time.time() * 1000),
         "totals": {
@@ -267,6 +326,7 @@ def admin_snapshot():
             "emptyParties": len(parties) - active_parties,
             "partySlots": len(parties),
         },
+        "mvp": mvp,
         "parties": parties,
         "students": students,
     }

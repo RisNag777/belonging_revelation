@@ -61,6 +61,44 @@ function renderTotals() {
   );
 }
 
+function renderMvp() {
+  const rows = data?.mvp || [];
+  return h("section", { class: "admin-panel admin-mvp" },
+    h("div", { class: "admin-panel-head" },
+      h("h2", {}, "MVP by party"),
+      h("p", {}, "One MVP per party — math, checks passed, HP, and progress"),
+    ),
+    rows.length
+      ? h("div", { class: "admin-table-wrap" },
+        h("table", { class: "admin-table" },
+          h("thead", {},
+            h("tr", {},
+              h("th", {}, "Party"),
+              h("th", {}, "MVP"),
+              h("th", {}, "Score"),
+              h("th", {}, "Why"),
+              h("th", {}, "Status"),
+            ),
+          ),
+          h("tbody", {}, rows.map((row) => h("tr", { class: "mvp-lead" },
+            h("td", { class: "admin-code" },
+              row.party,
+              h("div", { class: "admin-members" }, `${row.partySize || "?"} players`),
+            ),
+            h("td", {},
+              h("strong", {}, row.name),
+              h("div", { class: "admin-members" }, row.roleLabel),
+            ),
+            h("td", {}, String(row.score)),
+            h("td", {}, row.reason),
+            h("td", { class: statusClass(row.status) }, row.status),
+          ))),
+        ),
+      )
+      : h("p", { class: "admin-empty" }, "Party MVPs appear once students join a party."),
+  );
+}
+
 function renderStudents() {
   const rows = studentRows();
   if (!rows.length) {
@@ -153,6 +191,7 @@ function render() {
       ),
     ),
     renderTotals(),
+    renderMvp(),
     h("section", { class: "admin-panel" },
       h("div", { class: "admin-panel-head" },
         h("h2", {}, "Students"),

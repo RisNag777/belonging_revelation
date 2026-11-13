@@ -4,6 +4,18 @@ let data = null;
 let error = "";
 let filter = "all";
 let timer = null;
+const mvpByParty = {};
+
+function rememberMvp(rows) {
+  for (const row of rows || []) {
+    if (!row?.party) continue;
+    mvpByParty[row.party] = row;
+  }
+}
+
+function rememberedMvpRows() {
+  return Object.values(mvpByParty).sort((a, b) => String(a.party).localeCompare(String(b.party)));
+}
 
 function h(tag, attrs, ...kids) {
   const el = document.createElement(tag);
@@ -62,11 +74,11 @@ function renderTotals() {
 }
 
 function renderMvp() {
-  const rows = data?.mvp || [];
+  const rows = rememberedMvpRows();
   return h("section", { class: "admin-panel admin-mvp" },
     h("div", { class: "admin-panel-head" },
       h("h2", {}, "MVP by party"),
-      h("p", {}, "One MVP per party — math, checks passed, HP, and progress"),
+      h("p", {}, "One MVP per party — kept until you refresh this page"),
     ),
     rows.length
       ? h("div", { class: "admin-table-wrap" },
@@ -222,6 +234,7 @@ async function pull() {
     const response = await fetch("/api/admin", { cache: "no-store" });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     data = await response.json();
+    rememberMvp(data.mvp);
     error = "";
   } catch (err) {
     error = err?.message || "network error";

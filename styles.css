@@ -1,0 +1,296 @@
+:root {
+  --ink: #24180f;
+  --paper: #f4e6cf;
+  --panel: #fff8ec;
+  --line: #c4a574;
+  --good: #1f6b45;
+  --miss: #8d2f22;
+  --gold: #8a5a12;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font: 18px/1.45 Georgia, "Times New Roman", serif;
+  color: var(--ink);
+  background: #6d4c32;
+}
+button, input { font: inherit; }
+button { cursor: pointer; }
+#app { max-width: 980px; margin: 0 auto; padding: 20px 16px 40px; }
+.top { display: flex; justify-content: space-between; gap: 16px; align-items: end; color: #f6e7cf; }
+.top h1 { margin: 0; font-size: 2rem; }
+.eyebrow, .kicker, .credit { margin: 0; }
+.eyebrow { letter-spacing: 0.04em; text-transform: uppercase; font-size: 0.78rem; }
+.clock-slot { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.clock { font-variant-numeric: tabular-nums; font-size: 1.8rem; }
+.clock.low { color: #ffd0c2; }
+.menu-btn {
+  background: transparent;
+  color: #f6e7cf;
+  border: 1px solid #f0d7b4;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+}
+.stage {
+  margin-top: 16px;
+  background: var(--paper);
+  border-radius: 16px;
+  padding: 18px;
+}
+.roles, .party, .stats { display: grid; gap: 10px; }
+.roles, .party { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.role, .hero, .stat {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.role.selected { outline: 3px solid var(--gold); }
+button.role { width: 100%; text-align: left; color: inherit; }
+button.role:disabled { opacity: 0.55; cursor: default; }
+.role h3, .hero strong { margin: 0; }
+.code-banner { margin: 8px 0; font-size: 2.4rem; letter-spacing: 0.18em; }
+.code-board { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 10px; margin: 12px 0; }
+button.code-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  color: inherit;
+  text-align: left;
+}
+button.code-card strong { display: block; font-size: 1.25rem; letter-spacing: 0.12em; }
+button.code-card span { display: block; }
+button.code-card:disabled { opacity: 0.55; cursor: default; }
+.mini { display: block; color: #6b5340; font-size: 0.9rem; }
+.mini.hurt, .banner.miss { color: var(--miss); }
+.hero.hurt { border-color: var(--miss); }
+.hero.active { outline: 2px solid var(--gold); }
+.primary, .ghost {
+  border-radius: 999px;
+  padding: 0.7rem 1.1rem;
+  border: 0;
+}
+.primary { background: var(--gold); color: white; }
+.ghost, a.ghost {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  text-decoration: none;
+}
+a.ghost { display: inline-block; }
+.actions, .answer-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.answer-row input { flex: 1; min-width: 8rem; font-size: 1.3rem; padding: 0.4rem 0.6rem; }
+.die-face {
+  display: block;
+  height: 160px;
+  width: auto;
+  margin: 8px auto;
+}
+.roll-row { display: flex; align-items: center; gap: 14px; }
+.roll-die {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  object-position: center;
+  background: transparent;
+}
+.banner { padding: 8px 10px; border-radius: 8px; background: #f3d7cf; }
+.banner.good { background: #d9efe3; color: var(--good); }
+.score { display: grid; gap: 4px; margin: 10px 0; }
+.statline, .stat { display: flex; justify-content: space-between; gap: 8px; }
+.error { color: var(--miss); min-height: 1.2em; }
+.credit { margin-top: 14px; color: #f0d7b4; font-size: 0.85rem; }
+.map { list-style: none; padding: 0; }
+.map li { display: flex; justify-content: space-between; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.did-win strong { color: var(--good); }
+.did-miss strong { color: var(--miss); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.obituary .kicker { color: var(--miss); }
+.admin-body { background: #5d3f29; }
+#admin { max-width: 1180px; margin: 0 auto; padding: 20px 16px 48px; color: #f6e7cf; }
+.admin-top { display: flex; justify-content: space-between; gap: 16px; align-items: end; margin-bottom: 16px; }
+.admin-top h1 { margin: 0.15rem 0; font-size: 2rem; }
+.admin-top-meta { text-align: right; }
+.admin-updated { margin: 0 0 8px; font-size: 0.92rem; color: #f0d7b4; }
+.admin-totals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.admin-stat {
+  background: #fff8ec;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+.admin-stat span { display: block; color: #6b5340; font-size: 0.9rem; }
+.admin-stat strong { font-size: 1.7rem; }
+.admin-panel {
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.admin-panel-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.admin-panel-head h2 { margin: 0; }
+.admin-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.admin-table-wrap { overflow-x: auto; }
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.admin-table th,
+.admin-table td {
+  text-align: left;
+  padding: 0.55rem 0.45rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.admin-table th { color: #6b5340; font-weight: 700; white-space: nowrap; }
+.admin-table tr.is-empty td { opacity: 0.55; }
+.admin-code { font-family: ui-monospace, Consolas, monospace; letter-spacing: 0.08em; font-weight: 700; }
+.admin-members { color: #6b5340; font-size: 0.86rem; margin-top: 0.2rem; }
+.admin-pill {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: 0.75rem;
+  color: var(--gold);
+}
+.admin-phase {
+  display: inline-block;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  background: #efe2cd;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+.admin-phase.is-play { background: #d9efe3; color: var(--good); }
+.admin-phase.is-summary { background: #f3d7cf; color: var(--miss); }
+.admin-phase.is-lobby { background: #efe2cd; color: #6b5340; }
+.admin-table .bad { color: var(--miss); font-weight: 700; }
+.admin-table .warn { color: #9a4f12; font-weight: 700; }
+.admin-table .ok { color: var(--good); font-weight: 700; }
+.admin-table .live { color: #1d5f8a; font-weight: 700; }
+.admin-table .muted,
+.admin-members.muted { color: #8a7460; }
+.admin-empty { margin: 8px 0; color: #6b5340; }
+.obituary-story {
+  max-width: 42rem;
+  margin: 0 auto 12px;
+  text-align: center;
+  font-size: 1.08rem;
+}
+.grave {
+  position: relative;
+  width: min(100%, 680px);
+  aspect-ratio: 4 / 5;
+  margin: 10px auto 16px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(36, 24, 15, 0.28);
+}
+.grave-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 28%;
+}
+.grave-face {
+  position: absolute;
+  left: 50%;
+  top: 11%;
+  bottom: 22%;
+  width: 58%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.28em;
+  text-align: center;
+  padding: 0 2%;
+  box-sizing: border-box;
+  color: #fffdf6;
+  font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  -webkit-text-stroke: 0.85px rgba(8, 8, 8, 0.7);
+  text-shadow:
+    0 0 3px rgba(0, 0, 0, 0.98),
+    0 2px 3px rgba(0, 0, 0, 0.95),
+    0 0 10px rgba(0, 0, 0, 0.85),
+    1px 1px 0 rgba(0, 0, 0, 0.8),
+    -1px -1px 0 rgba(0, 0, 0, 0.55);
+}
+.grave-here,
+.grave-class,
+.grave-epitaph,
+.grave-place,
+.grave-rule {
+  margin: 0;
+  line-height: 1.15;
+  width: 100%;
+  text-align: center;
+}
+.grave-here {
+  font-size: clamp(1.25rem, 3.8vw, 1.7rem);
+  letter-spacing: 0.24em;
+  font-weight: 700;
+}
+.grave-name {
+  margin: 0;
+  font-size: clamp(2.6rem, 8.5vw, 3.9rem);
+  line-height: 1.02;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  text-transform: uppercase;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.grave-class {
+  font-size: clamp(1.5rem, 4.6vw, 2.15rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+.grave-rule {
+  font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+  line-height: 1;
+  opacity: 0.95;
+  margin: 0.25em 0;
+}
+.grave-epitaph {
+  font-size: clamp(1.35rem, 4.1vw, 1.9rem);
+  font-weight: 700;
+  max-width: 100%;
+}
+.grave-place {
+  margin-top: 0.45em;
+  font-size: clamp(1.25rem, 3.8vw, 1.7rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  font-style: italic;
+}
+@media (max-width: 520px) {
+  .grave-face {
+    width: 66%;
+    top: 10%;
+    bottom: 20%;
+  }
+}
